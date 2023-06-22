@@ -66,7 +66,11 @@
         const button = document.getElementById("example-button");
 
         button.addEventListener("click", function () {
-          style = "arcgis-human-geography-dark";
+          if (style == "arcgis-human-geography-dark") {
+            style = "arcgis-human-geography";
+          } else {
+            style = "arcgis-human-geography-dark";
+          }
           const newMap = new Map({
             basemap: style, //Basemap service
           });
