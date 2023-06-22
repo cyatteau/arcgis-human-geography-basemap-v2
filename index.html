@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ArcGIS Human Geography</title>
+    <meta
+      name="viewport"
+      content="initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      .code-btn {
+        position: absolute;
+        top: 92.5%;
+        bottom: auto;
+        left: 97.51%;
+        height: auto;
+        background-color: white;
+        border: 1px solid rgb(203, 201, 201);
+        border-radius: 6px;
+        padding: 5px;
+      }
+      .code-btn:hover {
+        cursor: pointer;
+        background-color: rgb(216, 212, 212);
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.25/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.25/"></script>
+    <script type="module">
+      require([
+        "esri/config",
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/widgets/Swipe",
+      ], (esriConfig, Map, MapView, FeatureLayer, Swipe) => {
+        esriConfig.apiKey =
+          "AAPKa2e75762cf67409a86af30d10be5a49dyVG402QjxPpUBGJlpAb9aQ1mCPEl5kgCBvUmLDA-gCYQcpOzyczieZ5jRuho2ipE";
+        let style = "arcgis-human-geography";
+        let map = new Map({
+          basemap: style, //Basemap service
+        });
+
+        let view = new MapView({
+          container: "viewDiv",
+          map: map,
+          center: [-122.445, 37.7605], //longitude, latitude
+          zoom: 12,
+          constraints: {
+            snapToZoom: false,
+          },
+        });
+
+        const button = document.getElementById("example-button");
+
+        button.addEventListener("click", function () {
+          style = "arcgis-human-geography-dark";
+          const newMap = new Map({
+            basemap: style, //Basemap service
+          });
+          view = new MapView({
+            container: "viewDiv",
+            map: newMap,
+            center: [-122.445, 37.7605], //longitude, latitude
+            zoom: 12,
+            constraints: {
+              snapToZoom: false,
+            },
+          });
+
+          const featureAnalysisLayer = new FeatureLayer({
+            url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/sf_osapi_driveways_sidewalk_hot_spots/FeatureServer/0",
+          });
+          newMap.add(featureAnalysisLayer);
+
+          // create a new Swipe widget
+          const swipe = new Swipe({
+            leadingLayers: [featureAnalysisLayer],
+            trailingLayers: [],
+            position: 25, // set position of widget to 35%
+            view: view,
+          });
+          // add the widget to the view
+          view.ui.add(swipe);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="viewDiv"></div>
+    <button id="example-button" class="code-btn">
+      <calcite-icon icon="contrast" text-label="file-code"> </calcite-icon>
+    </button>
+  </body>
+</html>
